@@ -192,6 +192,10 @@ test3[,2] = as.numeric(test3[,2])
 test3Matrix = as.matrix(test3)
 
 
+#used to keep only those variables in the importance matrix
+#train2Matrix = train2Matrix[,keep]
+#test3Matrix = test3Matrix[,keep]
+
 
 #cross_validation parameters
 numberOfClasses = 3
@@ -289,9 +293,25 @@ log_loss(outputFrame,num_predict)
 
 
 
+######################################################################################
+#
+#
+#feature_selection
+####################################################################################
 
 
+importance_matrix = as.data.frame(importance_matrix)
 
+
+#gets the names of the variables that matter
+top124 = importance_matrix[,1]
+
+
+#gets all the names in train2Matrix
+train2Col = colnames(train2Matrix)
+
+#gets the column numbers of the variables you should keep
+keep = which(train2Col %in%  top124)
 
 
 
@@ -366,3 +386,9 @@ log_loss <- function(data_frame, num_predict)
 
 
 }
+
+
+
+
+
+
