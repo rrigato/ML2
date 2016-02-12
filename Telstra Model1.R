@@ -192,9 +192,20 @@ test3[,2] = as.numeric(test3[,2])
 test3Matrix = as.matrix(test3)
 
 
+
+
+
 #used to keep only those variables in the importance matrix
 #train2Matrix = train2Matrix[,keep]
 #test3Matrix = test3Matrix[,keep]
+
+
+#create interaction for feature.203 and location after two keeps
+#train2Matrix = cbind(train2Matrix, train2Matrix[,10]*train2Matrix[,1])
+
+#test3Matrix = cbind(test3Matrix, test3Matrix[,10]*test3Matrix[,1])
+
+
 
 
 #cross_validation parameters
@@ -293,6 +304,11 @@ log_loss(outputFrame,num_predict)
 
 
 
+
+
+
+
+
 ######################################################################################
 #
 #
@@ -312,6 +328,28 @@ train2Col = colnames(train2Matrix)
 
 #gets the column numbers of the variables you should keep
 keep = which(train2Col %in%  top124)
+
+keep2 = which(train2Col %in%  top124)
+
+
+
+######################################################################################
+#
+#Plotting the matrix
+#
+#
+######################################################################################
+#backups while I am doing feature selection
+train5Matrix = train2Matrix
+test5Matrix = test3Matrix
+x11()
+par(mfrow = c(3,3))
+ for (i in 10:18){  plot(train2_response, exp(-train2Matrix[,i]), main = i)}
+
+
+
+
+
 
 
 
