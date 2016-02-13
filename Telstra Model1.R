@@ -196,8 +196,8 @@ test3Matrix = as.matrix(test3)
 
 
 #used to keep only those variables in the importance matrix
-#train2Matrix = train2Matrix[,keep]
-#test3Matrix = test3Matrix[,keep]
+#train2Matrix = train2Matrix[,keep3]
+#test3Matrix = test3Matrix[,keep3]
 
 
 #create interaction for feature.203 and location after two keeps
@@ -330,6 +330,9 @@ train2Col = colnames(train2Matrix)
 keep = which(train2Col %in%  top124)
 
 keep2 = which(train2Col %in%  top124)
+
+keep3 = which(train2Col %in% top124[1:125])
+
 
 
 

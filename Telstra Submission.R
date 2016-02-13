@@ -47,6 +47,11 @@ length(test3id) == nrow(test3)
 test3Matrix = as.matrix(test3)
 
 
+testKeep = which(colnames(test3Matrix) %in% colnames(train2Matrix))
+test3Matrix = test3Matrix[,testKeep]
+
+
+
 
 
 
@@ -84,22 +89,21 @@ for (i in 1:nrow(test))
 
 
 
-
-#average the observations with the same ids
-outputFrame[,5] = ave(outputFrame$predict_0, outputFrame$id, FUN=mean)
-outputFrame[,6] = ave(outputFrame$predict_1, outputFrame$id, FUN=mean)
-outputFrame[,7] = ave(outputFrame$predict_2,outputFrame$id, FUN=mean)
-outputFrame = outputFrame[,-c(2,3,4)]
-outputFrame = rename(outputFrame, c( "V5" = "predict_0", "V6" = "predict_1","V7" = "predict_2")) 
-
-
-
-outputFrame = outputFrame[!duplicated(outputFrame$id),]
-
 #validation
 nrow(outputFrame) == length(unique(test$id))
 sum(outputFrame$id != unique(test$id))
 sum(is.na(outputFrame))
+
+
+
+
+
+
+#write to the file
+write.csv(outputFrame, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results4.csv",
+		row.names = FALSE)
+
+
 
 
 
