@@ -361,9 +361,12 @@ train2Matrix = as.data.frame(train2Matrix)
 test3Matrix = as.data.frame(test3Matrix)
 
 
+train2Matrix[,1:451] = log(1 + train2Matrix[,1:451])
+test3Matrix[,1:451] = log(1 + test3Matrix[,1:451])
 
-train2Matrix[,10:18] = exp(-train2Matrix[,10:18])
-test3Matrix[,10:18] = exp(-test3Matrix[,10:18])
+
+train2Matrix[,1:451] = exp(-train2Matrix[,1:451])
+test3Matrix[,1:451] = exp(-test3Matrix[,1:451])
 
 train2Matrix[,133:142] = train2Matrix[,123:132] * train2Matrix[,1]
 test3Matrix[,133:142] = test3Matrix[,123:132] * test3Matrix[,1]
