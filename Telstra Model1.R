@@ -374,6 +374,39 @@ test3Matrix[,133:243] = test3Matrix[,3:113] * test3Matrix[,1]
 
 train2Matrix = data.matrix(train2Matrix)
 test3Matrix = data.matrix(test3Matrix)
+
+
+################################################################################
+#Random Forest attempt
+#
+#
+#
+#
+###############################################################################
+
+ranOut = randomForest( y = as.factor(train2_response), x = train2Matrix,
+				mtry = 10)
+importance(ranOut)
+plot(ranOut)
+
+ranPred = predict(ranOut, newdata = test3Matrix, type = 'prob')
+
+str(ranPred)
+ranPred = as.data.frame(ranPred)
+
+
+outputFrame4 = data.frame(matrix(nrow= nrow(test2), ncol=4))
+outputFrame4 = rename(outputFrame4, c("X1" = "id", "X2" = "predict_0", "X3" = "predict_1","X4" = "predict_2")) 
+outputFrame4[,1] = test3id
+outputFrame4[,2:4] = ranPred[,1:3]
+
+
+
+num_predict = 3
+log_loss(outputFrame4,num_predict)
+
+
+
 ##############################################################################
 #write the results of importance matrix to a csv
 #
