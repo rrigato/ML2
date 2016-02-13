@@ -196,8 +196,8 @@ test3Matrix = as.matrix(test3)
 
 
 #used to keep only those variables in the importance matrix
-#train2Matrix = train2Matrix[,keep3]
-#test3Matrix = test3Matrix[,keep3]
+#train2Matrix = train2Matrix[,keep]
+#test3Matrix = test3Matrix[,keep]
 
 
 #create interaction for feature.203 and location after two keeps
@@ -384,10 +384,23 @@ test3Matrix = data.matrix(test3Matrix)
 #
 ###############################################################################
 
-ranOut = randomForest( y = as.factor(train2_response), x = train2Matrix,
-				mtry = 10)
-importance(ranOut)
+ranOut = randomForest( y = as.factor(train2_response), 
+		x = train2Matrix[,keepTop] )
+ranImportance = as.data.frame(importance(ranOut))
+ranImportance[,2] = rownames(ranImportance)
+ranImportance = rename(ranImportance, c('V2' = 'VarName'))
+
+
+
+ranTop = arrange(ranImportance, MeanDecreaseGini)
+
+ranTop = ranTop[1:250,]
+head(ranTop)
 plot(ranOut)
+keepTop = which(colnames(train2Matrix) %in% ranTop[,2])
+
+
+
 
 ranPred = predict(ranOut, newdata = test3Matrix, type = 'prob')
 
@@ -404,6 +417,49 @@ outputFrame4[,2:4] = ranPred[,1:3]
 
 num_predict = 3
 log_loss(outputFrame4,num_predict)
+
+
+
+
+
+
+
+
+
+
+
+###########################################################################
+#RandomForest NDCG = 11.3959 XGBoost = .5803582
+#
+#ensembleFrame = .5 *XGBoost + .5* RandomForest = .6828388
+#ensembleFrame = .75 *XGBoost + .25* RandomForest = .6035602
+#ensembleFrame = .85 *XGBoost + .15* RandomForest = .587915
+##ensembleFrame = .9 *XGBoost + .1* RandomForest = .5831317
+############################################################################
+ensembleFrame = data.frame(matrix(nrow= nrow(test2), ncol=4))
+ensembleFrame = rename(ensembleFrame, c("X1" = "id", "X2" = "predict_0", 
+		"X3" = "predict_1","X4" = "predict_2")) 
+
+
+
+ensembleFrame[,1] = outputFrame4[,1]
+#checks to make sure the the ids are the same
+sum(ensembleFrame[,1] != outputFrame[,1])
+
+ensembleFrame[,2] = outputFrame[,2]
+ensembleFrame[,3:4] = .8*outputFrame[,3:4] + .2*outputFrame4[,3:4]
+
+
+num_predict = 3
+log_loss(ensembleFrame,num_predict)
+
+
+
+
+
+
+
+
 
 
 
