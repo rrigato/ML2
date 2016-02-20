@@ -461,10 +461,50 @@ log_loss(ensembleFrame,num_predict)
 
 
 
+#############################################################################
+#Deep Learning
+#
+#All variables .8 train .2 test log_loss = 1.0147
+#
+###############################################################################
+
+	explanFeatures = 4:50
 
 
+	train5 = train2
+	test5 = test2
+
+	#initializes a thread by connecting to h2os clusters
+	h2o.init(nthreads = -1)
 
 
+	#turns the numeric outcome variable to a factor
+	train5[,3] = as.factor(train5[,3])
+	test5[,3] = as.factor(test5[,3])
+
+	#converts the two dataframes into h2o frames
+	train5 = as.h2o(train5)
+	test5 = as.h2o(test5)
+
+	#builds the deep learning neural nets using only the features in explanFeatures
+	#2 is the outcome feature
+	trainDL = h2o.deeplearning(x = explanFeatures,y = 3 , training_frame = train5)
+
+	#makes probability predictions on the test5 data using the model built
+	predictions <- h2o.predict(trainDL, newdata = test5, type = "probs")
+
+	#turns h2o output into dataframe
+	DLPred = as.data.frame(predictions)
+
+
+	dlFrame = data.frame(matrix(nrow= nrow(test2), ncol=4))
+	dlFrame = rename(dlFrame, c("X1" = "id", "X2" = "predict_0", 
+		"X3" = "predict_1","X4" = "predict_2")) 
+	#adds ids back into outputFrame
+	dlFrame[,1] = as.data.frame(test5[,1])
+	dlFrame[,2:4] = DLPred[,2:4]
+
+	log_loss(dlFrame, 3)
 
 ##############################################################################
 #write the results of importance matrix to a csv
