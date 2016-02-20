@@ -302,7 +302,7 @@ log_loss(outputFrame,num_predict)
 
 
 
-cor(cbind(outputFrame[,4], dlFrame[,4]))
+
 
 
 
@@ -445,6 +445,39 @@ log_loss(outputFrame4,num_predict)
 #ensembleFrame = .8 *XGBoost + .2* RandomForest = 0.5426687
 #ensembleFrame = .95 *XGBoost + .05* RandomForest = 0.5334126
 
+#deepLearning NDCG = on paper XGBoost = .0.532
+
+#ensembleFrame = .1 *XGBoost + .1* dlFrame1:9 =  .7178831
+#ensembleFrame = .55 *XGBoost + .05* dlFrame1:9 =  .5980807
+#ensembleFrame = 1/9 *XGBoost + 1/9* dlFrame1:3 5:9 =  0.704988
+
+#ensembleFrame = 11/19 *XGBoost + 1/19* dlFrame1:3 5:9 =  .5889603
+
+#ensembleFrame = 1/8 *XGBoost + 1/8* dlFrame1:3 6:9 =  0.6881492
+
+#ensembleFrame = 1/7 *XGBoost + 1/7* dlFrame2:3 6:9 =   0.7126687
+
+#ensembleFrame = 11/17 *XGBoost + 1/17* dlFrame2:3 6:9 =  0.5783788
+
+#ensembleFrame = 31/37 *XGBoost + 1/17* dlFrame2:3 6:9 =  0.5491831
+
+#ensembleFrame = 30/35 *XGBoost + 1/5* dlFrame3 6:9 =  0.5469355
+
+
+#ensembleFrame = 30/35 *XGBoost + 1/5* dlFrame3 6:8 =  0.5486761
+
+#ensembleFrame = 30/35 *XGBoost + 1/5* dlFrame6:9 =  0.5477777
+
+
+##ensembleFrame = .99*XGBoost + .01* dlFrame7 = 0.5359111
+
+##ensembleFrame = .91*XGBoost + .03* dlFrame7:9 = 0.541342
+
+##ensembleFrame = .98*XGBoost + .01* dlFrame8:9 =  0.5358049
+
+
+##ensembleFrame = .99*XGBoost + .01* dlFrame10 =  0.5357707
+
 ############################################################################
 ensembleFrame = data.frame(matrix(nrow= nrow(test2), ncol=4))
 ensembleFrame = rename(ensembleFrame, c("X1" = "id", "X2" = "predict_0", 
@@ -457,15 +490,30 @@ ensembleFrame[,1] = outputFrame[,1]
 sum(ensembleFrame[,1] != outputFrame[,1])
 
 
-ensembleFrame[,2:4] = .999*outputFrame[,2:4] + .001*dlFrame[,2:4]
+ensembleFrame[,2:4] = ((.99)*outputFrame[,2:4] + (0)*dlFrame[,2:4] + (0)*dlFrame2[,2:4]
+	+ (0)*dlFrame3[,2:4] + 0*dlFrame4[,2:4] + (0)*dlFrame5[,2:4] + (0)*dlFrame6[,2:4]
+	 + (0)*dlFrame7[,2:4]  + (0)*dlFrame8[,2:4] + (0)*dlFrame9[,2:4]
+	+ .01 * dlFrame10[,2:4])
+
+as.numeric(sum(ensembleFrame[,2:4])) 
+nrow(test2)
+
+
+
+
+
+
 
 
 num_predict = 3
 log_loss(ensembleFrame,num_predict)
 
 
+#sees the correlation among predictor variables
+cor(cbind(outputFrame[,2:4], dlFrame11[,2:4]))
 
-
+#gives the columns in xgboost that are important
+xgUse = which(colnames(train6) %in% as.data.frame(importance_matrix)[,1])
 
 
 #############################################################################
@@ -474,16 +522,19 @@ log_loss(ensembleFrame,num_predict)
 #All variables .8 train .2 test log_loss = 1.0147
 #
 ###############################################################################
-
-	explanFeatures = 250:350
-
-
-	train5 = train2
-	test5 = test2
-
 	#initializes a thread by connecting to h2os clusters
 	h2o.init(nthreads = -1)
 
+
+	explanFeatures = 1:453
+	explanFeatures = explanFeatures[-c(xgUse,1,3)]
+
+
+	train5 = train6
+	test5 = test6
+
+	train5[,explanFeatures] = log(1 + train5[,explanFeatures])
+	test5[,explanFeatures] = log(1 + test5[,explanFeatures])
 
 	#turns the numeric outcome variable to a factor
 	train5[,3] = as.factor(train5[,3])
@@ -504,14 +555,14 @@ log_loss(ensembleFrame,num_predict)
 	DLPred = as.data.frame(predictions)
 
 
-	dlFrame2 = data.frame(matrix(nrow= nrow(test2), ncol=4))
-	dlFrame2 = rename(dlFrame2, c("X1" = "id", "X2" = "predict_0", 
+	dlFrame11 = data.frame(matrix(nrow= nrow(test2), ncol=4))
+	dlFrame11 = rename(dlFrame11, c("X1" = "id", "X2" = "predict_0", 
 		"X3" = "predict_1","X4" = "predict_2")) 
 	#adds ids back into outputFrame
-	dlFrame2[,1] = as.data.frame(test5[,1])
-	dlFrame2[,2:4] = DLPred[,2:4]
+	dlFrame11[,1] = as.data.frame(test5[,1])
+	dlFrame11[,2:4] = DLPred[,2:4]
 
-	log_loss(dlFrame, 3)
+	log_loss(dlFrame11, 3)
 
 ##############################################################################
 #write the results of importance matrix to a csv
