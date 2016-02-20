@@ -302,7 +302,7 @@ log_loss(outputFrame,num_predict)
 
 
 
-
+cor(cbind(outputFrame[,4], dlFrame[,4]))
 
 
 
@@ -438,6 +438,13 @@ log_loss(outputFrame4,num_predict)
 #ensembleFrame = .75 *XGBoost + .25* RandomForest = .6035602
 #ensembleFrame = .85 *XGBoost + .15* RandomForest = .587915
 ##ensembleFrame = .9 *XGBoost + .1* RandomForest = .5831317
+
+#deepLearning NDCG = .70 XGBoost = .0.5317137
+#ensembleFrame = .5 *XGBoost + .5* deepLearning =  0.5743975
+#ensembleFrame = .7 *XGBoost + .3* RandomForest = .5513724
+#ensembleFrame = .8 *XGBoost + .2* RandomForest = 0.5426687
+#ensembleFrame = .95 *XGBoost + .05* RandomForest = 0.5334126
+
 ############################################################################
 ensembleFrame = data.frame(matrix(nrow= nrow(test2), ncol=4))
 ensembleFrame = rename(ensembleFrame, c("X1" = "id", "X2" = "predict_0", 
@@ -445,12 +452,12 @@ ensembleFrame = rename(ensembleFrame, c("X1" = "id", "X2" = "predict_0",
 
 
 
-ensembleFrame[,1] = outputFrame4[,1]
+ensembleFrame[,1] = outputFrame[,1]
 #checks to make sure the the ids are the same
 sum(ensembleFrame[,1] != outputFrame[,1])
 
-ensembleFrame[,2] = outputFrame[,2]
-ensembleFrame[,3:4] = .8*outputFrame[,3:4] + .2*outputFrame4[,3:4]
+
+ensembleFrame[,2:4] = .999*outputFrame[,2:4] + .001*dlFrame[,2:4]
 
 
 num_predict = 3
@@ -468,7 +475,7 @@ log_loss(ensembleFrame,num_predict)
 #
 ###############################################################################
 
-	explanFeatures = 4:50
+	explanFeatures = 250:350
 
 
 	train5 = train2
@@ -497,12 +504,12 @@ log_loss(ensembleFrame,num_predict)
 	DLPred = as.data.frame(predictions)
 
 
-	dlFrame = data.frame(matrix(nrow= nrow(test2), ncol=4))
-	dlFrame = rename(dlFrame, c("X1" = "id", "X2" = "predict_0", 
+	dlFrame2 = data.frame(matrix(nrow= nrow(test2), ncol=4))
+	dlFrame2 = rename(dlFrame2, c("X1" = "id", "X2" = "predict_0", 
 		"X3" = "predict_1","X4" = "predict_2")) 
 	#adds ids back into outputFrame
-	dlFrame[,1] = as.data.frame(test5[,1])
-	dlFrame[,2:4] = DLPred[,2:4]
+	dlFrame2[,1] = as.data.frame(test5[,1])
+	dlFrame2[,2:4] = DLPred[,2:4]
 
 	log_loss(dlFrame, 3)
 
