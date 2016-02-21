@@ -279,21 +279,7 @@ for (i in 1:nrow(test2))
 }
 
 
-
-
-
-
-#average the observations with the same ids
-outputFrame[,5] = ave(outputFrame$predict_0, outputFrame$id, FUN=mean)
-outputFrame[,6] = ave(outputFrame$predict_1, outputFrame$id, FUN=mean)
-outputFrame[,7] = ave(outputFrame$predict_2,outputFrame$id, FUN=mean)
-outputFrame = outputFrame[,-c(2,3,4)]
-outputFrame = rename(outputFrame, c( "V5" = "predict_0", "V6" = "predict_1","V7" = "predict_2")) 
-
-
-
-outputFrame = outputFrame[!duplicated(outputFrame$id),]
-
+xgFrame7 = outputFrame
 
 
 num_predict = 3
@@ -320,7 +306,7 @@ importance_matrix = as.data.frame(importance_matrix)
 
 
 #gets the names of the variables that matter
-top124 = importance_matrix[,1]
+top124 = importance_matrix[1:10,1]
 
 
 #gets all the names in train2Matrix
@@ -371,12 +357,100 @@ test3Matrix[,1:451] = exp(-test3Matrix[,1:451])
 train2Matrix[,133:142] = train2Matrix[,123:132] * train2Matrix[,1]
 test3Matrix[,133:142] = test3Matrix[,123:132] * test3Matrix[,1]
 
-train2Matrix[,133:243] = train2Matrix[,3:113] * train2Matrix[,1]
-test3Matrix[,133:243] = test3Matrix[,3:113] * test3Matrix[,1]
+train2Matrix[,1:451] = train2Matrix[,1:451] * train2Matrix[,1:451]
+test3Matrix[,1:451] = test3Matrix[,1:451] * test3Matrix[,1:451]
 
 
 train2Matrix = data.matrix(train2Matrix)
 test3Matrix = data.matrix(test3Matrix)
+
+
+
+
+
+
+Normalize  <- function(train2)
+{
+
+
+	#scale() is what normalizes the column, have to cast it as numeric first
+	#iterates over ever column deemed numeric by the numericColumns function
+	for (i in 1:451)
+	{
+		train2[,i] = as.numeric(scale(train2[,i])) 
+	}	
+	
+	return(train2);
+}
+
+train2Matrix = Normalize(train2Matrix)
+test3Matrix = Normalize(test3Matrix)
+
+for (i in 1:ncol(train2Matrix))
+{
+train2Matrix[which(is.na(train2Matrix[,i])),i] = 0
+}
+
+for (i in 1:ncol(test3Matrix))
+{
+test3Matrix[which(is.na(test3Matrix[,i])),i] = 0
+}
+#######################################################################################
+#All xgboost ensemble
+#1/5 xgFrame1:5 gives .5688524 
+#
+#1/7 xgFrame1:7 gives .5665393 
+#2/7 xgFrame3:4 1/7 xgFrame5:7 .5613909
+######################################################################################
+
+
+ensembleFrame = data.frame(matrix(nrow= nrow(test2), ncol=4))
+ensembleFrame = rename(ensembleFrame, c("X1" = "id", "X2" = "predict_0", 
+		"X3" = "predict_1","X4" = "predict_2")) 
+
+
+
+ensembleFrame[,1] = xgFrame1[,1]
+#checks to make sure the the ids are the same
+sum(ensembleFrame[,1] != outputFrame[,1])
+
+
+ensembleFrame[,2:4] =  ((0)*xgFrame1[,2:4] + (0)*xgFrame2[,2:4]
+	+ (4/7)*xgFrame3[,2:4] + (0)*xgFrame4[,2:4] + (1/7)*xgFrame5[,2:4] +
+(1/7)*xgFrame6[,2:4]+
+(1/7)*xgFrame7[,2:4] ) 
+#+ (0)*xgFrame8[,2:4] + (0)*xgFrame9[,2:4]
+#	+ (0) * xgFrame10[,2:4])
+
+as.numeric(sum(ensembleFrame[,2:4])) 
+nrow(test2)
+
+
+
+
+
+
+
+
+num_predict = 3
+log_loss(ensembleFrame,num_predict)
+
+
+#sees the correlation among predictor variables
+cor(cbind(xgFrame3[,2:4], xgFrame4[,2:4]))
+
+
+
+
+
+
+train2Matrix = train10Matrix; test3Matrix=test10Matrix
+
+
+
+
+
+
 
 
 ################################################################################
