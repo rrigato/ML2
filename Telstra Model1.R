@@ -262,9 +262,9 @@ outputFrame = data.frame(matrix(nrow= nrow(test2), ncol=4))
 outputFrame = rename(outputFrame, c("X1" = "id", "X2" = "predict_0", "X3" = "predict_1","X4" = "predict_2")) 
 
 #Puts the ids for the observations into the first column of outputFrame[,1]
-outputFrame[,1] = test2[,1]
+outputFrame[,1] = test3id
 #test to make sure ids are the same
-sum(outputFrame[,1] != test2[,1])
+sum(outputFrame[,1] != test3id)
 z_element = 1
 for (i in 1:nrow(test2))
 {
@@ -279,7 +279,7 @@ for (i in 1:nrow(test2))
 }
 
 
-xgFrame7 = outputFrame
+xgFrame2 = outputFrame
 
 
 num_predict = 3
@@ -289,12 +289,33 @@ log_loss(outputFrame,num_predict)
 
 
 
+################################################################################
+#xgboost + gbm = .8643995
+#
+#
+#
+################################################################################
+bTree = gbm(train2_response ~. -id, distribution = "multinomial", n.trees = 200,
+		data = train5)
 
 
+bTreeP = predict(bTree, newdata = test5, n.trees = 500, type = "response")
+
+bTreeP = as.data.frame(bTreeP)
+head(bTreeP)
 
 
+	#initializes and fills the outputFrame that will be tested in the log_loss function 
+	#and then returned
+	doubleFrame = data.frame(matrix(nrow= nrow(test2), ncol=4))
+	doubleFrame = rename(doubleFrame, c("X1" = "id", "X2" = "predict_0", "X3" = "predict_1", "X4" = "predict_2"))
 
+doubleFrame[,1] = test3id
+doubleFrame[,2:4] = bTreeP[,1:3]
+head(doubleFrame)
 
+num_predict = 3
+log_loss(doubleFrame,num_predict)
 ######################################################################################
 #
 #
