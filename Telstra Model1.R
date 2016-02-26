@@ -13,6 +13,10 @@
 #
 #########################################################################################
 
+#for the extraTrees model
+library(extraTrees)
+
+
 #for knn model
 library(class)
 
@@ -96,7 +100,7 @@ test <- read.csv("C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\testParse.csv")
 
 
 #edit The percentage of the dataset in the train2 and test2, used to build a model 
-size_of_train = floor(.8*nrow(train))
+size_of_train = floor(.9*nrow(train))
 ran_num_test = 1:nrow(train)
 
 #gets random numbers for train2 using a sample
@@ -327,7 +331,7 @@ importance_matrix = as.data.frame(importance_matrix)
 
 
 #gets the names of the variables that matter
-top124 = importance_matrix[1:10,1]
+top124 = importance_matrix[,1]
 
 
 #gets all the names in train2Matrix
@@ -353,10 +357,13 @@ keep3 = which(train2Col %in% top124[1:125])
 train5Matrix = train2Matrix
 test5Matrix = test3Matrix
 x11()
+
+top20 = importance_matrix[1:20,1]
+train_num = which(colnames(train) %in% top20)
 par(mfrow = c(3,3))
- for (i in 10:18){  plot(train2_response, exp(-train2Matrix[,i]), main = i)}
+ for (i in 1:9){  plot(train[,3], train[,train_num[i]], main = train_num[i])}
 
-
+for (i in 1:9){  plot(train[,train_num[i + 1]], train[,train_num[i]],main =  train_num[i])}
 
 
 
@@ -368,8 +375,8 @@ train2Matrix = as.data.frame(train2Matrix)
 test3Matrix = as.data.frame(test3Matrix)
 
 
-train2Matrix[,1:451] = log(1 + train2Matrix[,1:451])
-test3Matrix[,1:451] = log(1 + test3Matrix[,1:451])
+train2Matrix[,177:344] = train2[,9:176] * train2[,162]
+test3Matrix[,177:344] = test3Matrix[,9:176] * test3Matrix[,162]
 
 
 train2Matrix[,1:451] = exp(-train2Matrix[,1:451])
@@ -416,6 +423,40 @@ for (i in 1:ncol(test3Matrix))
 {
 test3Matrix[which(is.na(test3Matrix[,i])),i] = 0
 }
+
+###################################################################################
+#Attempting an extraTrees model
+#extraTrees(x,y, mtry = 50, nodesize = 5, numRandomCuts = 5) = .7690955
+#extraTrees(x,y, mtry = 10, nodesize = 5, numRandomCuts = 5) = .5759467
+#
+#
+####################################################################################
+
+x = train2Matrix
+y = as.factor(train2_response)
+
+
+
+eT = extraTrees(x,y, mtry = 10, nodesize = 5, numRandomCuts = 5)
+etOut = predict(eT, newdata = test3Matrix, probability=TRUE)
+etOut = as.data.frame(etOut)
+
+
+#initialize output frame
+etFrame = data.frame(matrix(nrow= nrow(test2), ncol=4))
+etFrame = rename(etFrame, c("X1" = "id", "X2" = "predict_0", "X3" = "predict_1","X4" = "predict_2")) 
+
+#Puts the ids for the observations into the first column of outputFrame[,1]
+etFrame[,1] = test3id
+
+
+etFrame[,2:4] = etOut[,1:3]
+
+
+num_predict = 3
+log_loss(etFrame,num_predict)
+
+
 #######################################################################################
 #All xgboost ensemble
 #1/5 xgFrame1:5 gives .5688524 

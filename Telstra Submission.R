@@ -94,13 +94,15 @@ nrow(outputFrame) == length(unique(test$id))
 sum(outputFrame$id != unique(test$id))
 sum(is.na(outputFrame))
 
+#should be 11171
+sum(outputFrame[,2:4])
 
 
 
 
 
 #write to the file
-write.csv(outputFrame, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results4.csv",
+write.csv(outputFrame, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results6.csv",
 		row.names = FALSE)
 
 
