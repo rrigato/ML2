@@ -218,7 +218,7 @@ param = list( "objective" = "multi:softprob",
 		"eval_metric" = "mlogloss",
 		"num_class" = numberOfClasses
 		)
-cv.nround <- 1000
+cv.nround <- 500
 cv.nfold <- 3
 
 #setting up cross_validation
@@ -432,13 +432,13 @@ test3Matrix[which(is.na(test3Matrix[,i])),i] = 0
 #
 ####################################################################################
 
-x = train2Matrix
+x = train5Matrix
 y = as.factor(train2_response)
 
 
 
-eT = extraTrees(x,y, mtry = 10, nodesize = 5, numRandomCuts = 5)
-etOut = predict(eT, newdata = test3Matrix, probability=TRUE)
+eT = extraTrees(x,y, mtry = 35, nodesize = 5, numRandomCuts = 5)
+etOut = predict(eT, newdata = test5Matrix, probability=TRUE)
 etOut = as.data.frame(etOut)
 
 
