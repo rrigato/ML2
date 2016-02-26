@@ -47,8 +47,8 @@ length(test3id) == nrow(test3)
 test3Matrix = as.matrix(test3)
 
 
-testKeep = which(colnames(test3Matrix) %in% colnames(train2Matrix))
-test3Matrix = test3Matrix[,testKeep]
+#testKeep = which(colnames(test3Matrix) %in% colnames(train2Matrix))
+#test3Matrix = test3Matrix[,testKeep]
 
 
 
@@ -65,22 +65,22 @@ str(bstPred)
 
 
 #initialize output frame
-outputFrame = data.frame(matrix(nrow= nrow(test), ncol=4))
-outputFrame = rename(outputFrame, c("X1" = "id", "X2" = "predict_0", "X3" = "predict_1","X4" = "predict_2")) 
+finalFrame = data.frame(matrix(nrow= nrow(test), ncol=4))
+finalFrame = rename(finalFrame, c("X1" = "id", "X2" = "predict_0", "X3" = "predict_1","X4" = "predict_2")) 
 
-#Puts the ids for the observations into the first column of outputFrame[,1]
-outputFrame[,1] = test[,1]
+#Puts the ids for the observations into the first column of finalFrame[,1]
+finalFrame[,1] = test[,1]
 #test to make sure ids are the same
-sum(outputFrame[,1] != test[,1])
+sum(finalFrame[,1] != test[,1])
 z_element = 1
 for (i in 1:nrow(test))
 {
 	for (z in 1:3)
 	{
-		#the ith row of outputFrame is given observation z_element
+		#the ith row of finalFrame is given observation z_element
 		#probability of occuring from bstPred
 		#column z+1 since id is in column 1
-		outputFrame[i,z+1] = bstPred[z_element]
+		finalFrame[i,z+1] = bstPred[z_element]
 		z_element = z_element + 1
 	}
 }
@@ -90,36 +90,94 @@ for (i in 1:nrow(test))
 
 
 #validation
-nrow(outputFrame) == length(unique(test$id))
-sum(outputFrame$id != unique(test$id))
-sum(is.na(outputFrame))
+nrow(finalFrame) == length(unique(test$id))
+sum(finalFrame$id != unique(test$id))
+sum(is.na(finalFrame))
 
 #should be 11171
-sum(outputFrame[,2:4])
+sum(finalFrame[,2:4])
+
+
+###########################################################################################################
+#extraTrees model
+#
+#
+#
+##########################################################################################################
+
+
+
+
+
+
+
+etOut2 = predict(eT, newdata = test3Matrix, probability=TRUE)
+etOut2 = as.data.frame(etOut2)
+
+
+#initialize output frame
+finalFrame2 = data.frame(matrix(nrow= nrow(test), ncol=4))
+finalFrame2 = rename(finalFrame2, c("X1" = "id", "X2" = "predict_0", "X3" = "predict_1","X4" = "predict_2")) 
+
+#Puts the ids for the observations into the first column of outputFrame[,1]
+finalFrame2[,1] = test3id
+
+
+finalFrame2[,2:4] = etOut2[,1:3]
+
+
+
+
+#validation
+nrow(finalFrame2) == length(unique(test$id))
+sum(finalFrame2$id != unique(test$id))
+sum(is.na(finalFrame2))
+
+#should be 11171
+sum(finalFrame2[,2:4])
+
+
+
+
+
+
+##########################################################################################################
+#finalEnsemble between the two models
+#
+#
+#
+#
+###########################################################################################################
+
+finalEnsemble = data.frame(matrix(nrow= nrow(test), ncol=4))
+finalEnsemble = rename(finalEnsemble, c("X1" = "id", "X2" = "predict_0", 
+		"X3" = "predict_1","X4" = "predict_2")) 
+
+
+
+finalEnsemble[,1] = test3id
+#checks to make sure the the ids are the same
+sum(finalEnsemble[,1] != test3id)
+
+
+finalEnsemble[,2:4] = ((.5)*finalFrame[,2:4] + (.5)*finalFrame2[,2:4]) 
+
+#validation
+nrow(finalEnsemble) == length(unique(test$id))
+sum(finalEnsemble$id != unique(test$id))
+sum(is.na(finalEnsemble))
+
+#should be 11171
+sum(finalEnsemble[,2:4])
 
 
 
 
 
 #write to the file
-write.csv(outputFrame, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results6.csv",
+write.csv(finalEnsemble, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results7.csv",
 		row.names = FALSE)
 
-
-
-
-
-Result1 = read.csv("C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results.csv")
-
-
-Result2 = read.csv("C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results2.csv")
-
-
-Difference = abs((Result1[,2:4] - outputFrame[,2:4]))
-#write the data frame to an excel file
-write.xlsx(outputFrame,'C:/Users/Randy/Downloads/Kaggle Telstra/Results2.xlsx')
-
-write.xlsx(outputFrame,'C:/Users/Randy/Downloads/Kaggle Telstra/Results3.xlsx')
 
 
 

@@ -499,7 +499,7 @@ log_loss(ensembleFrame,num_predict)
 
 
 #sees the correlation among predictor variables
-cor(cbind(xgFrame3[,2:4], xgFrame4[,2:4]))
+cor(cbind(xgFrame2[,2:4], etFrame[,2:4]))
 
 
 
@@ -614,6 +614,12 @@ log_loss(outputFrame4,num_predict)
 
 ##ensembleFrame = .99*XGBoost + .01* dlFrame10 =  0.5357707
 
+
+#ensembleFrame = .5*XGBoost + .5* etFrame =  0.4832427
+
+#ensembleFrame = .8*XGBoost + .2* etFrame =  0.4886569
+#ensembleFrame = .2*XGBoost + .8* etFrame =  0.487004
+#ensembleFrame = .6*XGBoost + .4* etFrame =  0.4831148
 ############################################################################
 ensembleFrame = data.frame(matrix(nrow= nrow(test2), ncol=4))
 ensembleFrame = rename(ensembleFrame, c("X1" = "id", "X2" = "predict_0", 
@@ -626,10 +632,13 @@ ensembleFrame[,1] = outputFrame[,1]
 sum(ensembleFrame[,1] != outputFrame[,1])
 
 
-ensembleFrame[,2:4] = ((.99)*outputFrame[,2:4] + (0)*dlFrame[,2:4] + (0)*dlFrame2[,2:4]
+ensembleFrame[,2:4] = ((.6)*outputFrame[,2:4] + (.4)*etFrame[,2:4]) 
+
+
++ (0)*dlFrame2[,2:4]
 	+ (0)*dlFrame3[,2:4] + 0*dlFrame4[,2:4] + (0)*dlFrame5[,2:4] + (0)*dlFrame6[,2:4]
 	 + (0)*dlFrame7[,2:4]  + (0)*dlFrame8[,2:4] + (0)*dlFrame9[,2:4]
-	+ .01 * dlFrame10[,2:4])
+	+ 0 * dlFrame10[,2:4])
 
 as.numeric(sum(ensembleFrame[,2:4])) 
 nrow(test2)
