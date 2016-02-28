@@ -100,7 +100,7 @@ test <- read.csv("C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\testParse.csv")
 
 
 #edit The percentage of the dataset in the train2 and test2, used to build a model 
-size_of_train = floor(.9*nrow(train))
+size_of_train = floor(.8*nrow(train))
 ran_num_test = 1:nrow(train)
 
 #gets random numbers for train2 using a sample
@@ -218,7 +218,7 @@ param = list( "objective" = "multi:softprob",
 		"eval_metric" = "mlogloss",
 		"num_class" = numberOfClasses
 		)
-cv.nround <- 500
+cv.nround <- 250
 cv.nfold <- 3
 
 #setting up cross_validation
@@ -375,8 +375,115 @@ train2Matrix = as.data.frame(train2Matrix)
 test3Matrix = as.data.frame(test3Matrix)
 
 
-train2Matrix[,177:344] = train2[,9:176] * train2[,162]
-test3Matrix[,177:344] = test3Matrix[,9:176] * test3Matrix[,162]
+
+
+
+
+##adding new variables
+train2Matrix[,452:456] = 0
+test3Matrix[,452:456] = 0
+
+#only severity_type 1
+train2Matrix[which(train2Matrix[,2] ==1),452] = 1
+test3Matrix[which(test3Matrix[,2] ==1),452] = 1
+
+
+#severtity_type 2 3 4 5
+train2Matrix[which(train2Matrix[,2] !=1),453] = 1
+test3Matrix[which(test3Matrix[,2] !=1),453] = 1
+
+
+#only resource_type.8
+train2Matrix[which(train2Matrix[,389] !=0),454] = 1
+test3Matrix[which(test3Matrix[,389] !=0),454] = 1
+
+#all other resource_types
+train2Matrix[which(train2Matrix[,389] ==0),455] = 1
+test3Matrix[which(test3Matrix[,389] ==0),455] = 1
+
+
+#severity_type 1 or 2
+
+train2Matrix[which(train2Matrix[,2] ==1  | train2Matrix[,2] == 2),456] = 1
+test3Matrix[which(test3Matrix[,2] ==1 | test3Matrix[,2] == 2),456] = 1
+
+
+
+
+train2Matrix[,457:465] = 0
+test3Matrix[,457:465] = 0
+
+#severity_type*location
+train2Matrix[,457] = train2Matrix[,1]* train2Matrix[,2]
+test3Matrix[,457] = test3Matrix[,1] * test3Matrix[,2]
+
+
+#severity_type * id
+train2Matrix[,458] = train2id* train2Matrix[,2]
+test3Matrix[,458] = test3id * test3Matrix[,2]
+
+
+#location * id
+train2Matrix[,459] = train2id* train2Matrix[,1]
+test3Matrix[,459] = test3id * test3Matrix[,1]
+
+
+
+#location > 750
+train2Matrix[which(train2Matrix[,1] >750),460] = 1
+test3Matrix[which(test3Matrix[,1] >750),460] = 1
+
+#location >500 <= 750
+train2Matrix[which(train2Matrix[,1] > 500  & train2Matrix[,1] <= 750),461] = 1
+test3Matrix[which(test3Matrix[,1]   > 500  & test3Matrix[,1]  <= 750),461] = 1
+
+
+
+
+#location >250 <= 500
+train2Matrix[which(train2Matrix[,1] > 250  & train2Matrix[,1] <= 500),462] = 1
+test3Matrix[which(test3Matrix[,1]   > 250  & test3Matrix[,1]  <= 500),462] = 1
+
+
+#location <=250
+train2Matrix[which( train2Matrix[,1] <= 250),463] = 1
+test3Matrix[which( test3Matrix[,1]  <= 250),463] = 1
+
+
+
+#location*severity_type <1850
+train2Matrix[which( train2Matrix[,457] <= 1850),464] = 1
+test3Matrix[which( test3Matrix[,457]  <= 1850),464] = 1
+
+
+
+#location*severity_type >1850
+train2Matrix[which( train2Matrix[,457] > 1850),465] = 1
+test3Matrix[which( test3Matrix[,457]  > 1850),465] = 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+train2Matrix[,452] = train2[,1] * train2[,2]
+test3Matrix[,452] = test3Matrix[,1] * test3Matrix[,2]
+
+
+train2Matrix[,452] = train2Matrix[,1] * train2Matrix[,2]
+test3Matrix[,452] = test3Matrix[,1] * test3Matrix[,2]
+
+train2Matrix[,453:515]= train2Matrix[,389:451] * train2Matrix[,389:451]
+test3Matrix[,453:515] = test3Matrix[,389:451] * test3Matrix[,389:451]
 
 
 train2Matrix[,1:451] = exp(-train2Matrix[,1:451])
@@ -423,6 +530,10 @@ for (i in 1:ncol(test3Matrix))
 {
 test3Matrix[which(is.na(test3Matrix[,i])),i] = 0
 }
+
+
+
+
 
 ###################################################################################
 #Attempting an extraTrees model
