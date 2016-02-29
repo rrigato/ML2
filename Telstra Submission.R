@@ -97,7 +97,8 @@ sum(is.na(finalFrame))
 #should be 11171
 sum(finalFrame[,2:4])
 
-
+write.csv(finalFrame, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame.csv",
+		row.names = FALSE)
 ###########################################################################################################
 #extraTrees model
 #
@@ -136,7 +137,8 @@ sum(is.na(finalFrame2))
 #should be 11171
 sum(finalFrame2[,2:4])
 
-
+write.csv(finalFrame2, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame2.csv",
+		row.names = FALSE)
 
 
 
@@ -160,7 +162,7 @@ finalEnsemble[,1] = test3id
 sum(finalEnsemble[,1] != test3id)
 
 
-finalEnsemble[,2:4] = ((.5)*finalFrame[,2:4] + (.5)*finalFrame2[,2:4]) 
+finalEnsemble[,2:4] = ((.8)*finalFrame[,2:4] + (.2)*finalFrame2[,2:4]) 
 
 #validation
 nrow(finalEnsemble) == length(unique(test$id))
@@ -175,7 +177,7 @@ sum(finalEnsemble[,2:4])
 
 
 #write to the file
-write.csv(finalEnsemble, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results7.csv",
+write.csv(finalEnsemble, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results11.csv",
 		row.names = FALSE)
 
 

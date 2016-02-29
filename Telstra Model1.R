@@ -100,7 +100,7 @@ test <- read.csv("C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\testParse.csv")
 
 
 #edit The percentage of the dataset in the train2 and test2, used to build a model 
-size_of_train = floor(.8*nrow(train))
+size_of_train = floor(1*nrow(train))
 ran_num_test = 1:nrow(train)
 
 #gets random numbers for train2 using a sample
@@ -465,6 +465,46 @@ test3Matrix[which( test3Matrix[,457]  > 1850),465] = 1
 
 
 
+train2Matrix[,466:851] = train2Matrix[,3:388] * train2id
+test3Matrix[,466:851] = test3Matrix[3:388] * test3id
+
+
+
+
+
+
+
+
+
+###########################################################################
+#finalFrame3 variables
+#
+#
+#
+############################################################################
+
+
+
+train2Matrix[,452:514] = train2Matrix[,389:451] * train2id
+test3Matrix[,452:514] = test3Matrix[389:451] * test3id
+
+
+
+train2Matrix[,515:577] = train2Matrix[,389:451] * train2Matrix[,1]
+test3Matrix[,515:577] = test3Matrix[389:451] * test3Matrix[,1]
+
+
+
+train2Matrix[,578:640] = train2Matrix[,389:451] * train2Matrix[,2]
+test3Matrix[,578:640] = test3Matrix[389:451] * test3Matrix[,2]
+
+
+
+train2Matrix[,641:1026] = train2Matrix[,3:388] * train2Matrix[,2]
+test3Matrix[,641:1026] = test3Matrix[3:388] * test3Matrix[,2]
+
+train2Matrix = train2Matrix[,-c(1:452)]
+test3Matrix = test3Matrix[,-c(1:452)]
 
 
 
@@ -479,11 +519,22 @@ train2Matrix[,452] = train2[,1] * train2[,2]
 test3Matrix[,452] = test3Matrix[,1] * test3Matrix[,2]
 
 
+
 train2Matrix[,452] = train2Matrix[,1] * train2Matrix[,2]
 test3Matrix[,452] = test3Matrix[,1] * test3Matrix[,2]
 
 train2Matrix[,453:515]= train2Matrix[,389:451] * train2Matrix[,389:451]
 test3Matrix[,453:515] = test3Matrix[,389:451] * test3Matrix[,389:451]
+
+
+
+
+
+
+
+
+
+
 
 
 train2Matrix[,1:451] = exp(-train2Matrix[,1:451])
@@ -543,12 +594,12 @@ test3Matrix[which(is.na(test3Matrix[,i])),i] = 0
 #
 ####################################################################################
 
-x = train5Matrix
+x = train2Matrix
 y = as.factor(train2_response)
 
 
 
-eT = extraTrees(x,y, mtry = 35, nodesize = 5, numRandomCuts = 5)
+eT = extraTrees(x,y, mtry = 20, nodesize = 5, numRandomCuts = 5)
 etOut = predict(eT, newdata = test5Matrix, probability=TRUE)
 etOut = as.data.frame(etOut)
 
