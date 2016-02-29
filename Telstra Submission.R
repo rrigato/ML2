@@ -347,6 +347,91 @@ write.csv(finalFrame6, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame6
 
 
 
+################################################################
+#finalFrame7 	implementation of extreme gradient boosting algorithms(xgboost)
+#
+#
+##################################################################
+
+
+#extracts the location variable as a string
+test[,2] = as.numeric(str_sub(test$location, start= 10))
+
+
+
+
+#extracts severity_type
+test[,3] = as.numeric(str_sub(test$severity_type, start= 15))
+
+
+test3id = test[,1]
+test3 = test[,-c(1)]
+
+#checks that the number of ids in the vector is equal to the number of rows in 
+#the data frames
+
+length(test3id) == nrow(test3)
+
+
+
+
+
+
+test3Matrix = as.matrix(test3)
+
+
+#testKeep = which(colnames(test3Matrix) %in% colnames(train2Matrix))
+#test3Matrix = test3Matrix[,testKeep]
+
+
+
+
+
+
+#the predictions are in a nrow(test3)*3 long vector
+#bstPred[1:3] is the probability of 0,1,2 for fault_severity
+#for the first observation of test
+#has to be a numeric matrix just like the training set
+bstPred = predict(bst, test3Matrix)
+is.vector(bstPred)
+str(bstPred)
+
+
+#initialize output frame
+finalFrame7 = data.frame(matrix(nrow= nrow(test), ncol=4))
+finalFrame7 = rename(finalFrame7, c("X1" = "id", "X2" = "predict_0", "X3" = "predict_1","X4" = "predict_2")) 
+
+#Puts the ids for the observations into the first column of finalFrame7[,1]
+finalFrame7[,1] = test[,1]
+#test to make sure ids are the same
+sum(finalFrame7[,1] != test[,1])
+z_element = 1
+for (i in 1:nrow(test))
+{
+	for (z in 1:3)
+	{
+		#the ith row of finalFrame7 is given observation z_element
+		#probability of occuring from bstPred
+		#column z+1 since id is in column 1
+		finalFrame7[i,z+1] = bstPred[z_element]
+		z_element = z_element + 1
+	}
+}
+
+
+
+
+
+#validation
+nrow(finalFrame7) == length(unique(test$id))
+sum(finalFrame7$id != unique(test$id))
+sum(is.na(finalFrame7))
+
+#should be 11171
+sum(finalFrame7[,2:4])
+
+write.csv(finalFrame7, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame7.csv",
+		row.names = FALSE)
 
 
 
@@ -357,9 +442,207 @@ write.csv(finalFrame6, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame6
 
 
 
-cor(cbind(finalFrame[,4], finalFrame2[,4], finalFrame3[,4], finalFrame4[,4], finalFrame5[,4]))
 
 
+
+
+
+
+
+
+################################################################
+#finalFrame8 	implementation of extreme gradient boosting algorithms(xgboost)
+#
+#
+##################################################################
+
+
+#extracts the location variable as a string
+test[,2] = as.numeric(str_sub(test$location, start= 10))
+
+
+
+
+#extracts severity_type
+test[,3] = as.numeric(str_sub(test$severity_type, start= 15))
+
+
+test3id = test[,1]
+test3 = test[,-c(1)]
+
+#checks that the number of ids in the vector is equal to the number of rows in 
+#the data frames
+
+length(test3id) == nrow(test3)
+
+
+
+
+
+
+test3Matrix = as.matrix(test3)
+
+
+#testKeep = which(colnames(test3Matrix) %in% colnames(train2Matrix))
+#test3Matrix = test3Matrix[,testKeep]
+
+
+
+
+
+
+#the predictions are in a nrow(test3)*3 long vector
+#bstPred[1:3] is the probability of 0,1,2 for fault_severity
+#for the first observation of test
+#has to be a numeric matrix just like the training set
+bstPred = predict(bst, test3Matrix)
+is.vector(bstPred)
+str(bstPred)
+
+
+#initialize output frame
+finalFrame8 = data.frame(matrix(nrow= nrow(test), ncol=4))
+finalFrame8 = rename(finalFrame8, c("X1" = "id", "X2" = "predict_0", "X3" = "predict_1","X4" = "predict_2")) 
+
+#Puts the ids for the observations into the first column of finalFrame8[,1]
+finalFrame8[,1] = test[,1]
+#test to make sure ids are the same
+sum(finalFrame8[,1] != test[,1])
+z_element = 1
+for (i in 1:nrow(test))
+{
+	for (z in 1:3)
+	{
+		#the ith row of finalFrame8 is given observation z_element
+		#probability of occuring from bstPred
+		#column z+1 since id is in column 1
+		finalFrame8[i,z+1] = bstPred[z_element]
+		z_element = z_element + 1
+	}
+}
+
+
+
+
+
+#validation
+nrow(finalFrame8) == length(unique(test$id))
+sum(finalFrame8$id != unique(test$id))
+sum(is.na(finalFrame8))
+
+#should be 11171
+sum(finalFrame8[,2:4])
+
+write.csv(finalFrame8, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame8.csv",
+		row.names = FALSE)
+
+
+
+
+
+
+
+
+
+################################################################
+#finalFrame9 	implementation of extreme gradient boosting algorithms(xgboost)
+#
+#
+##################################################################
+
+
+#extracts the location variable as a string
+test[,2] = as.numeric(str_sub(test$location, start= 10))
+
+
+
+
+#extracts severity_type
+test[,3] = as.numeric(str_sub(test$severity_type, start= 15))
+
+
+test3id = test[,1]
+test3 = test[,-c(1)]
+
+#checks that the number of ids in the vector is equal to the number of rows in 
+#the data frames
+
+length(test3id) == nrow(test3)
+
+
+
+
+
+
+test3Matrix = as.matrix(test3)
+
+
+#testKeep = which(colnames(test3Matrix) %in% colnames(train2Matrix))
+#test3Matrix = test3Matrix[,testKeep]
+
+
+
+
+
+
+#the predictions are in a nrow(test3)*3 long vector
+#bstPred[1:3] is the probability of 0,1,2 for fault_severity
+#for the first observation of test
+#has to be a numeric matrix just like the training set
+bstPred = predict(bst, test3Matrix)
+is.vector(bstPred)
+str(bstPred)
+
+
+#initialize output frame
+finalFrame9 = data.frame(matrix(nrow= nrow(test), ncol=4))
+finalFrame9 = rename(finalFrame9, c("X1" = "id", "X2" = "predict_0", "X3" = "predict_1","X4" = "predict_2")) 
+
+#Puts the ids for the observations into the first column of finalFrame9[,1]
+finalFrame9[,1] = test[,1]
+#test to make sure ids are the same
+sum(finalFrame9[,1] != test[,1])
+z_element = 1
+for (i in 1:nrow(test))
+{
+	for (z in 1:3)
+	{
+		#the ith row of finalFrame9 is given observation z_element
+		#probability of occuring from bstPred
+		#column z+1 since id is in column 1
+		finalFrame9[i,z+1] = bstPred[z_element]
+		z_element = z_element + 1
+	}
+}
+
+
+
+
+
+#validation
+nrow(finalFrame9) == length(unique(test$id))
+sum(finalFrame9$id != unique(test$id))
+sum(is.na(finalFrame9))
+
+#should be 11171
+sum(finalFrame9[,2:4])
+
+write.csv(finalFrame9, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame9.csv",
+		row.names = FALSE)
+
+
+
+
+
+
+
+
+cor(cbind(finalFrame[,4], finalFrame2[,4], finalFrame3[,4], finalFrame4[,4], finalFrame5[,4], dlFrame11[,4]))
+
+
+
+
+cor(cbind(finalFrame[,2:4], finalFrame9[,2:4]))
 
 
 
@@ -395,8 +678,8 @@ finalEnsemble[,1] = test3id
 sum(finalEnsemble[,1] != test3id)
 
 
-finalEnsemble[,2:4] = ((.7)*finalFrame[,2:4] + (.125)*finalFrame2[,2:4] + (.125) * finalFrame3[,2:4]
-					+(.05)* finalFrame4[,2:4]) 
+finalEnsemble[,2:4] = ((.65)*finalFrame[,2:4] + (.1)*finalFrame2[,2:4] + (.1) * finalFrame3[,2:4]
+					 + (.15) * finalFrame9[,2:4]) 
 
 #validation
 nrow(finalEnsemble) == length(unique(test$id))
@@ -411,7 +694,7 @@ sum(finalEnsemble[,2:4])
 
 
 #write to the file
-write.csv(finalEnsemble, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results13.csv",
+write.csv(finalEnsemble, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results17.csv",
 		row.names = FALSE)
 
 

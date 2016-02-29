@@ -204,6 +204,11 @@ test3Matrix = as.matrix(test3)
 #test3Matrix = test3Matrix[,keep]
 
 
+#train2Matrix = train2Matrix[,452:493]
+#test3Matrix = test3Matrix[,452:493]
+
+
+
 #create interaction for feature.203 and location after two keeps
 #train2Matrix = cbind(train2Matrix, train2Matrix[,10]*train2Matrix[,1])
 
@@ -766,8 +771,8 @@ test3Matrix[which( test3Matrix[,457]  < 400),465] = 1
 
 
 ##adding new variables
-train2Matrix[,466:475] = 0
-test3Matrix[,466:475] = 0
+train2Matrix[,466:480] = 0
+test3Matrix[,466:480] = 0
 
 
 #location*severity_type <800 >=400
@@ -836,37 +841,120 @@ train2Matrix[which( train2Matrix[,473] < 750  & train2Matrix[,473] >= 500),476] 
 test3Matrix[which( test3Matrix[,473]   < 750  & test3Matrix[,473]  >= 500),476] = 1
 
 
+#location* resource_type8 <1000 >= 750
+train2Matrix[which( train2Matrix[,473] < 1000  & train2Matrix[,473] >= 750),477] = 1
+test3Matrix[which( test3Matrix[,473]   < 1000  & test3Matrix[,473]  >= 750),477] = 1
 
 
 
 
-train2Matrix[,474:483] = train2Matrix[,389:398] * train2id
-test3Matrix[,474:483] = test3Matrix[,389:398] * test3id
+#location* resource_type8 >=1000
+train2Matrix[which( train2Matrix[,473] >= 1000) ,478] = 1
+test3Matrix[which( test3Matrix[,473] >=1000),478] = 1
+
+
+
+#location if  severity_type = 1
+train2Matrix[which(train2Matrix[,2] == 1),479] = train2Matrix[which(train2Matrix[,2] == 1),1]
+test3Matrix[which(test3Matrix[,2]  == 1),479]  = test3Matrix[which(test3Matrix[,2]  == 1),1] 
+
+#location if  severity_type = 2
+train2Matrix[which(train2Matrix[,2] == 2),480] = train2Matrix[which(train2Matrix[,2] == 2),1]
+test3Matrix[which(test3Matrix[,2]  == 2),480]  = test3Matrix[which(test3Matrix[,2]  == 2),1] 
+
+
+
+train2Matrix[,481:491] = 0
+test3Matrix[,481:491] = 0
+#location <200
+train2Matrix[which(train2Matrix[,479] < 200),481]  = 1
+test3Matrix[which(test3Matrix[,479]   < 200),481]  = 1 
+
+#location <400  >= 200
+train2Matrix[which(train2Matrix[,479] < 400  &  train2Matrix[,479] >= 200 ),482]  = 1
+test3Matrix[which(test3Matrix[,479]   < 400  &  test3Matrix[,479]  >= 200 ),482]  = 1 
+
+
+
+
+#location <600  >= 400
+train2Matrix[which(train2Matrix[,479] < 600  &  train2Matrix[,479] >= 400 ),483]  = 1
+test3Matrix[which(test3Matrix[,479]   < 600  &  test3Matrix[,479]  >= 400 ),483]  = 1
+
+
+
+ 
+
+#location <800  >= 600
+train2Matrix[which(train2Matrix[,479] < 800  &  train2Matrix[,479] >= 600 ),484]  = 1
+test3Matrix[which(test3Matrix[,479]   < 800  &  test3Matrix[,479]  >= 600 ),484]  = 1
+
+
+
+#location <1000  >= 800
+train2Matrix[which(train2Matrix[,479] < 1000  &  train2Matrix[,479] >= 800 ),485]  = 1
+test3Matrix[which(test3Matrix[,479]   < 1000  &  test3Matrix[,479]  >= 800 ),485]  = 1
+
+
+
+
+#location >= 1000
+train2Matrix[which(train2Matrix[,479] >=1000 ),486]  = 1
+test3Matrix[which(test3Matrix[,479]   >=1000 ),486]  = 1
+
+
+
+
+#location * id if  severity_type = 1
+train2Matrix[which(train2Matrix[,2] == 1),487] = train2Matrix[which(train2Matrix[,2] == 1),1] * train2id[which(train2Matrix[,2] == 1)]
+test3Matrix[which(test3Matrix[,2]  == 1),487]  = test3Matrix[which(test3Matrix[,2]  == 1),1]* test3id[which(test3Matrix[,2]  == 1)] 
+
+
+
+#location *id < 1.5 million
+train2Matrix[which(train2Matrix[,487] < 1500000  ),488]  = 1
+test3Matrix[which(test3Matrix[,487]   < 1500000  ),488]  = 1 
+
+#location *id >= 1.5 million  < 3 mill
+train2Matrix[which(train2Matrix[,487] < 3000000  &  train2Matrix[,487] >= 1500000 ),489]  = 1
+test3Matrix[which(test3Matrix[,487]   < 3000000  &  test3Matrix[,487]  >= 1500000 ),489]  = 1 
+
+
+
+#location *id >= 3 million  < 4.5 mill
+train2Matrix[which(train2Matrix[,487] >= 3000000  &  train2Matrix[,487] < 4500000 ),490]  = 1
+test3Matrix[which(test3Matrix[,487]   >= 3000000  &  test3Matrix[,487]  < 4500000 ),490]  = 1 
+
+
+
+#location *id >= 4.5 million  < 6 mill
+train2Matrix[which(train2Matrix[,487] >= 4500000  &  train2Matrix[,487] < 6000000 ),491]  = 1
+test3Matrix[which(test3Matrix[,487]   >= 4500000  &  test3Matrix[,487]  < 6000000 ),491]  = 1
 
 
 
 
 
+train2Matrix[,492:493] = 0
+test3Matrix[,492:493] = 0
+
+
+
+#location *id >= 6 million  < 7.5 mill
+train2Matrix[which(train2Matrix[,487] >= 6000000  &  train2Matrix[,487] < 7500000 ),492]  = 1
+test3Matrix[which(test3Matrix[,487]   >= 6000000  &  test3Matrix[,487]  < 7500000 ),492]  = 1
 
 
 
 
 
+#location *id >= 7.5mill
+train2Matrix[which(train2Matrix[,487] >= 7500000  ),493]  = 1
+test3Matrix[which(test3Matrix[,487]   >= 7500000  ),493]  = 1
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+train2Matrix = train2Matrix[,452:493]
+test3Matrix = test3Matrix[,452:493]
 
 
 
@@ -965,8 +1053,8 @@ y = as.factor(train2_response)
 
 
 
-eT = extraTrees(x,y, mtry = 20, nodesize = 5, numRandomCuts = 5)
-etOut = predict(eT, newdata = test5Matrix, probability=TRUE)
+eT = extraTrees(x,y, mtry = 3, nodesize = 15, numRandomCuts = 10)
+etOut = predict(eT, newdata = test3Matrix, probability=TRUE)
 etOut = as.data.frame(etOut)
 
 
@@ -1199,27 +1287,20 @@ xgUse = which(colnames(train6) %in% as.data.frame(importance_matrix)[,1])
 	h2o.init(nthreads = -1)
 
 
-	explanFeatures = 1:453
-	explanFeatures = explanFeatures[-c(xgUse,1,3)]
-
-
-	train5 = train6
-	test5 = test6
-
-	train5[,explanFeatures] = log(1 + train5[,explanFeatures])
-	test5[,explanFeatures] = log(1 + test5[,explanFeatures])
-
 	#turns the numeric outcome variable to a factor
-	train5[,3] = as.factor(train5[,3])
+	train2_response = as.factor(train2_response)
 	test5[,3] = as.factor(test5[,3])
 
+	trainOut = cbind(train2Matrix[,452:493],train2_response)
 	#converts the two dataframes into h2o frames
-	train5 = as.h2o(train5)
-	test5 = as.h2o(test5)
+	train5 = as.h2o(trainOut)
+	test5 = as.h2o(test3Matrix[,452:493])
+
+	explanFeatures = 1:42
 
 	#builds the deep learning neural nets using only the features in explanFeatures
 	#2 is the outcome feature
-	trainDL = h2o.deeplearning(x = explanFeatures,y = 3 , training_frame = train5)
+	trainDL = h2o.deeplearning(x = explanFeatures,y = 43 , training_frame = train5)
 
 	#makes probability predictions on the test5 data using the model built
 	predictions <- h2o.predict(trainDL, newdata = test5, type = "probs")
@@ -1228,11 +1309,11 @@ xgUse = which(colnames(train6) %in% as.data.frame(importance_matrix)[,1])
 	DLPred = as.data.frame(predictions)
 
 
-	dlFrame11 = data.frame(matrix(nrow= nrow(test2), ncol=4))
+	dlFrame11 = data.frame(matrix(nrow= nrow(test), ncol=4))
 	dlFrame11 = rename(dlFrame11, c("X1" = "id", "X2" = "predict_0", 
 		"X3" = "predict_1","X4" = "predict_2")) 
 	#adds ids back into outputFrame
-	dlFrame11[,1] = as.data.frame(test5[,1])
+	dlFrame11[,1] = test3id
 	dlFrame11[,2:4] = DLPred[,2:4]
 
 	log_loss(dlFrame11, 3)
