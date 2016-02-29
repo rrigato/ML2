@@ -508,6 +508,362 @@ test3Matrix = test3Matrix[,-c(1:452)]
 
 
 
+###########################################################################
+#finalFrame5 variables
+#
+#
+#
+############################################################################
+
+train2Matrix[,1:451] = exp(-train2Matrix[,1:451])
+test3Matrix[,1:451] = exp(-test3Matrix[,1:451])
+
+
+##adding new variables
+train2Matrix[,452:456] = 0
+test3Matrix[,452:456] = 0
+
+#only severity_type 1
+train2Matrix[which(train2Matrix[,2] ==1),452] = 1
+test3Matrix[which(test3Matrix[,2] ==1),452] = 1
+
+
+#severtity_type 2 3 4 5
+train2Matrix[which(train2Matrix[,2] !=1),453] = 1
+test3Matrix[which(test3Matrix[,2] !=1),453] = 1
+
+
+#only resource_type.8
+train2Matrix[which(train2Matrix[,389] !=0),454] = 1
+test3Matrix[which(test3Matrix[,389] !=0),454] = 1
+
+#all other resource_types
+train2Matrix[which(train2Matrix[,389] ==0),455] = 1
+test3Matrix[which(test3Matrix[,389] ==0),455] = 1
+
+
+#severity_type 1 or 2
+
+train2Matrix[which(train2Matrix[,2] ==1  | train2Matrix[,2] == 2),456] = 1
+test3Matrix[which(test3Matrix[,2] ==1 | test3Matrix[,2] == 2),456] = 1
+
+
+
+
+train2Matrix[,457:465] = 0
+test3Matrix[,457:465] = 0
+
+#severity_type*location
+train2Matrix[,457] = train2Matrix[,1]* train2Matrix[,2]
+test3Matrix[,457] = test3Matrix[,1] * test3Matrix[,2]
+
+
+#severity_type * id
+train2Matrix[,458] = train2id* train2Matrix[,2]
+test3Matrix[,458] = test3id * test3Matrix[,2]
+
+
+#location * id
+train2Matrix[,459] = train2id* train2Matrix[,1]
+test3Matrix[,459] = test3id * test3Matrix[,1]
+
+
+
+#location > 750
+train2Matrix[which(train2Matrix[,1] >750),460] = 1
+test3Matrix[which(test3Matrix[,1] >750),460] = 1
+
+#location >500 <= 750
+train2Matrix[which(train2Matrix[,1] > 500  & train2Matrix[,1] <= 750),461] = 1
+test3Matrix[which(test3Matrix[,1]   > 500  & test3Matrix[,1]  <= 750),461] = 1
+
+
+
+
+#location >250 <= 500
+train2Matrix[which(train2Matrix[,1] > 250  & train2Matrix[,1] <= 500),462] = 1
+test3Matrix[which(test3Matrix[,1]   > 250  & test3Matrix[,1]  <= 500),462] = 1
+
+
+#location <=250
+train2Matrix[which( train2Matrix[,1] <= 250),463] = 1
+test3Matrix[which( test3Matrix[,1]  <= 250),463] = 1
+
+
+
+#location*severity_type <1850
+train2Matrix[which( train2Matrix[,457] <= 1850),464] = 1
+test3Matrix[which( test3Matrix[,457]  <= 1850),464] = 1
+
+
+
+#location*severity_type <400
+train2Matrix[which( train2Matrix[,457] <400),465] = 1
+test3Matrix[which( test3Matrix[,457]  < 400),465] = 1
+
+
+##adding new variables
+train2Matrix[,466:475] = 0
+test3Matrix[,466:475] = 0
+
+
+#location*severity_type <800 >=400
+train2Matrix[which( train2Matrix[,457] < 800 & train2Matrix[,457] >= 400),466] = 1
+test3Matrix[which( test3Matrix[,457]  < 800  & test3Matrix[,457]  >= 400),466] = 1
+
+
+
+#location*severity_type <1200 >=800
+train2Matrix[which( train2Matrix[,457] < 1200  & train2Matrix[,457] >= 800),467] = 1
+test3Matrix[which( test3Matrix[,457]   < 1200  & test3Matrix[,457]  >= 800),467] = 1
+
+
+#location*severity_type <1600 >=1200
+train2Matrix[which( train2Matrix[,457] < 1600  & train2Matrix[,457] >= 1200),468] = 1
+test3Matrix[which( test3Matrix[,457]   < 1600  & test3Matrix[,457]  >= 1200),468] = 1
+
+
+#location*severity_type <2000 >=1600
+train2Matrix[which( train2Matrix[,457] < 2000  & train2Matrix[,457] >= 1600),469] = 1
+test3Matrix[which( test3Matrix[,457]   < 2000  & test3Matrix[,457]  >= 1600),469] = 1
+
+
+
+
+
+#location*severity_type <2400 >=2000
+train2Matrix[which( train2Matrix[,457] < 2400  & train2Matrix[,457] >= 2000),469] = 1
+test3Matrix[which( test3Matrix[,457]   < 2400  & test3Matrix[,457]  >= 2000),469] = 1
+
+
+
+
+#location*severity_type <2800 >=2400
+train2Matrix[which( train2Matrix[,457] < 2800  & train2Matrix[,457] >= 2400),470] = 1
+test3Matrix[which( test3Matrix[,457]   < 2800  & test3Matrix[,457]  >= 2400),470] = 1
+
+
+#location*severity_type <3200 >=2800
+train2Matrix[which( train2Matrix[,457] < 3200  & train2Matrix[,457] >= 2800),471] = 1
+test3Matrix[which( test3Matrix[,457]   < 3200  & test3Matrix[,457]  >= 2800),471] = 1
+
+#location*severity_type >= 3200
+train2Matrix[which( train2Matrix[,457] >= 3200  ),472] = 1
+test3Matrix[which( test3Matrix[,457]   >= 3200 ),472] = 1
+
+
+#location* resource_type8
+
+
+train2Matrix[,473] = train2Matrix[,389] * train2Matrix[,1]
+test3Matrix[,473] = test3Matrix[,389] * test3Matrix[,1]
+
+
+train2Matrix[,474:483] = train2Matrix[,389:398] * train2id
+test3Matrix[,474:483] = test3Matrix[,389:398] * test3id
+
+
+
+
+
+
+
+
+
+
+
+
+###########################################################################
+#finalFrame6 variables
+#
+#
+#
+############################################################################
+
+
+
+##adding new variables
+train2Matrix[,452:456] = 0
+test3Matrix[,452:456] = 0
+
+#only severity_type 1
+train2Matrix[which(train2Matrix[,2] ==1),452] = 1
+test3Matrix[which(test3Matrix[,2] ==1),452] = 1
+
+
+#severtity_type 2 3 4 5
+train2Matrix[which(train2Matrix[,2] !=1),453] = 1
+test3Matrix[which(test3Matrix[,2] !=1),453] = 1
+
+
+#only resource_type.8
+train2Matrix[which(train2Matrix[,389] !=0),454] = 1
+test3Matrix[which(test3Matrix[,389] !=0),454] = 1
+
+#all other resource_types
+train2Matrix[which(train2Matrix[,389] ==0),455] = 1
+test3Matrix[which(test3Matrix[,389] ==0),455] = 1
+
+
+#severity_type 1 or 2
+
+train2Matrix[which(train2Matrix[,2] ==1  | train2Matrix[,2] == 2),456] = 1
+test3Matrix[which(test3Matrix[,2] ==1 | test3Matrix[,2] == 2),456] = 1
+
+
+
+
+train2Matrix[,457:465] = 0
+test3Matrix[,457:465] = 0
+
+#severity_type*location
+train2Matrix[,457] = train2Matrix[,1]* train2Matrix[,2]
+test3Matrix[,457] = test3Matrix[,1] * test3Matrix[,2]
+
+
+#severity_type * id
+train2Matrix[,458] = train2id* train2Matrix[,2]
+test3Matrix[,458] = test3id * test3Matrix[,2]
+
+
+#location * id
+train2Matrix[,459] = train2id* train2Matrix[,1]
+test3Matrix[,459] = test3id * test3Matrix[,1]
+
+
+
+#location > 750
+train2Matrix[which(train2Matrix[,1] >750),460] = 1
+test3Matrix[which(test3Matrix[,1] >750),460] = 1
+
+#location >500 <= 750
+train2Matrix[which(train2Matrix[,1] > 500  & train2Matrix[,1] <= 750),461] = 1
+test3Matrix[which(test3Matrix[,1]   > 500  & test3Matrix[,1]  <= 750),461] = 1
+
+
+
+
+#location >250 <= 500
+train2Matrix[which(train2Matrix[,1] > 250  & train2Matrix[,1] <= 500),462] = 1
+test3Matrix[which(test3Matrix[,1]   > 250  & test3Matrix[,1]  <= 500),462] = 1
+
+
+#location <=250
+train2Matrix[which( train2Matrix[,1] <= 250),463] = 1
+test3Matrix[which( test3Matrix[,1]  <= 250),463] = 1
+
+
+
+#location*severity_type <1850
+train2Matrix[which( train2Matrix[,457] <= 1850),464] = 1
+test3Matrix[which( test3Matrix[,457]  <= 1850),464] = 1
+
+
+
+#location*severity_type <400
+train2Matrix[which( train2Matrix[,457] <400),465] = 1
+test3Matrix[which( test3Matrix[,457]  < 400),465] = 1
+
+
+##adding new variables
+train2Matrix[,466:475] = 0
+test3Matrix[,466:475] = 0
+
+
+#location*severity_type <800 >=400
+train2Matrix[which( train2Matrix[,457] < 800 & train2Matrix[,457] >= 400),466] = 1
+test3Matrix[which( test3Matrix[,457]  < 800  & test3Matrix[,457]  >= 400),466] = 1
+
+
+
+#location*severity_type <1200 >=800
+train2Matrix[which( train2Matrix[,457] < 1200  & train2Matrix[,457] >= 800),467] = 1
+test3Matrix[which( test3Matrix[,457]   < 1200  & test3Matrix[,457]  >= 800),467] = 1
+
+
+#location*severity_type <1600 >=1200
+train2Matrix[which( train2Matrix[,457] < 1600  & train2Matrix[,457] >= 1200),468] = 1
+test3Matrix[which( test3Matrix[,457]   < 1600  & test3Matrix[,457]  >= 1200),468] = 1
+
+
+#location*severity_type <2000 >=1600
+train2Matrix[which( train2Matrix[,457] < 2000  & train2Matrix[,457] >= 1600),469] = 1
+test3Matrix[which( test3Matrix[,457]   < 2000  & test3Matrix[,457]  >= 1600),469] = 1
+
+
+
+
+
+#location*severity_type <2400 >=2000
+train2Matrix[which( train2Matrix[,457] < 2400  & train2Matrix[,457] >= 2000),469] = 1
+test3Matrix[which( test3Matrix[,457]   < 2400  & test3Matrix[,457]  >= 2000),469] = 1
+
+
+
+
+#location*severity_type <2800 >=2400
+train2Matrix[which( train2Matrix[,457] < 2800  & train2Matrix[,457] >= 2400),470] = 1
+test3Matrix[which( test3Matrix[,457]   < 2800  & test3Matrix[,457]  >= 2400),470] = 1
+
+
+#location*severity_type <3200 >=2800
+train2Matrix[which( train2Matrix[,457] < 3200  & train2Matrix[,457] >= 2800),471] = 1
+test3Matrix[which( test3Matrix[,457]   < 3200  & test3Matrix[,457]  >= 2800),471] = 1
+
+#location*severity_type >= 3200
+train2Matrix[which( train2Matrix[,457] >= 3200  ),472] = 1
+test3Matrix[which( test3Matrix[,457]   >= 3200 ),472] = 1
+
+
+#location* resource_type8
+
+
+train2Matrix[,473] = train2Matrix[,389] * train2Matrix[,1]
+test3Matrix[,473] = test3Matrix[,389] * test3Matrix[,1]
+
+#location* resource_type8 < 250
+train2Matrix[which(train2Matrix[,473] <250),474] = 1
+test3Matrix[which(test3Matrix[,473] <250),474] = 1
+
+
+#location* resource_type8 <500 >= 250
+train2Matrix[which( train2Matrix[,473] < 500  & train2Matrix[,473] >= 250),475] = 1
+test3Matrix[which( test3Matrix[,473]   < 500  & test3Matrix[,473]  >= 250),475] = 1
+
+
+#location* resource_type8 <750 >= 500
+train2Matrix[which( train2Matrix[,473] < 750  & train2Matrix[,473] >= 500),476] = 1
+test3Matrix[which( test3Matrix[,473]   < 750  & test3Matrix[,473]  >= 500),476] = 1
+
+
+
+
+
+
+train2Matrix[,474:483] = train2Matrix[,389:398] * train2id
+test3Matrix[,474:483] = test3Matrix[,389:398] * test3id
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -531,8 +887,18 @@ test3Matrix[,453:515] = test3Matrix[,389:451] * test3Matrix[,389:451]
 
 
 
+s1id = train2id[which(train2Matrix[,2] == 1)]
+s1Testid = test3id[which(test3Matrix[,2] == 1)]
+s1 = train2Matrix[which(train2Matrix[,2] == 1),1:465]
+s1Test = test3Matrix[which(test3Matrix[,2] == 1),1:465]
 
 
+
+
+sALLid = train2id[which(train2Matrix[,2] != 1)]
+sAllTestid = test3id[which(test3Matrix[,2] != 1)]
+sALL = train2Matrix[which(train2Matrix[,2] != 1),1:465]
+sALLTest = test3Matrix[which(test3Matrix[,2] != 1),1:465]
 
 
 

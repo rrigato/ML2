@@ -143,6 +143,239 @@ write.csv(finalFrame2, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame2
 
 
 
+
+
+
+
+
+
+###########################################################################################################
+#extraTrees model 2 
+#
+#
+#
+##########################################################################################################
+
+
+
+
+
+
+#needed more memory so I ran:
+# options( java.parameters = "-Xmx4g" )
+
+etOut2 = predict(eT, newdata = test3Matrix, probability=TRUE)
+etOut2 = as.data.frame(etOut2)
+
+
+#initialize output frame
+finalFrame3 = data.frame(matrix(nrow= nrow(test), ncol=4))
+finalFrame3 = rename(finalFrame3, c("X1" = "id", "X2" = "predict_0", "X3" = "predict_1","X4" = "predict_2")) 
+
+#Puts the ids for the observations into the first column of outputFrame[,1]
+finalFrame3[,1] = test3id
+
+
+finalFrame3[,2:4] = etOut2[,1:3]
+
+
+
+
+#validation
+nrow(finalFrame3) == length(unique(test$id))
+sum(finalFrame3$id != unique(test$id))
+sum(is.na(finalFrame3))
+
+#should be 11171
+sum(finalFrame3[,2:4])
+
+write.csv(finalFrame3, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame3.csv",
+		row.names = FALSE)
+
+
+
+
+
+
+
+
+###########################################################################################################
+#extraTrees model 4 
+#
+#
+#
+##########################################################################################################
+
+
+
+
+
+
+#needed more memory so I ran:
+# options( java.parameters = "-Xmx4g" )
+
+etOut2 = predict(eT, newdata = test3Matrix, probability=TRUE)
+etOut2 = as.data.frame(etOut2)
+
+
+#initialize output frame
+finalFrame4 = data.frame(matrix(nrow= nrow(test), ncol=4))
+finalFrame4 = rename(finalFrame4, c("X1" = "id", "X2" = "predict_0", "X3" = "predict_1","X4" = "predict_2")) 
+
+#Puts the ids for the observations into the first column of outputFrame[,1]
+finalFrame4[,1] = test3id
+
+
+finalFrame4[,2:4] = etOut2[,1:3]
+
+
+
+
+#validation
+nrow(finalFrame4) == length(unique(test$id))
+sum(finalFrame4$id != unique(test$id))
+sum(is.na(finalFrame4))
+
+#should be 11171
+sum(finalFrame4[,2:4])
+
+write.csv(finalFrame4, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame4.csv",
+		row.names = FALSE)
+
+
+
+
+
+
+cor(cbind(finalFrame[,4], finalFrame2[,4], finalFrame3[,4], finalFrame4[,4]))
+
+
+
+
+
+
+###########################################################################################################
+#extraTrees model 5 
+#
+#
+#
+##########################################################################################################
+
+
+
+
+
+
+#needed more memory so I ran:
+# options( java.parameters = "-Xmx4g" )
+
+etOut2 = predict(eT, newdata = test3Matrix, probability=TRUE)
+etOut2 = as.data.frame(etOut2)
+
+
+#initialize output frame
+finalFrame5 = data.frame(matrix(nrow= nrow(test), ncol=4))
+finalFrame5 = rename(finalFrame5, c("X1" = "id", "X2" = "predict_0", "X3" = "predict_1","X4" = "predict_2")) 
+
+#Puts the ids for the observations into the first column of outputFrame[,1]
+finalFrame5[,1] = test3id
+
+
+finalFrame5[,2:4] = etOut2[,1:3]
+
+
+
+
+#validation
+nrow(finalFrame5) == length(unique(test$id))
+sum(finalFrame5$id != unique(test$id))
+sum(is.na(finalFrame5))
+
+#should be 11171
+sum(finalFrame5[,2:4])
+
+write.csv(finalFrame5, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame5.csv",
+		row.names = FALSE)
+
+
+
+
+###########################################################################################################
+#extraTrees model 6 
+#
+#
+#
+##########################################################################################################
+
+
+
+
+
+
+#needed more memory so I ran:
+# options( java.parameters = "-Xmx4g" )
+
+etOut2 = predict(eT, newdata = test3Matrix, probability=TRUE)
+etOut2 = as.data.frame(etOut2)
+
+
+#initialize output frame
+finalFrame6 = data.frame(matrix(nrow= nrow(test), ncol=4))
+finalFrame6 = rename(finalFrame6, c("X1" = "id", "X2" = "predict_0", "X3" = "predict_1","X4" = "predict_2")) 
+
+#Puts the ids for the observations into the first column of outputFrame[,1]
+finalFrame6[,1] = test3id
+
+
+finalFrame6[,2:4] = etOut2[,1:3]
+
+
+
+
+#validation
+nrow(finalFrame6) == length(unique(test$id))
+sum(finalFrame6$id != unique(test$id))
+sum(is.na(finalFrame6))
+
+#should be 11171
+sum(finalFrame6[,2:4])
+
+write.csv(finalFrame6, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame6.csv",
+		row.names = FALSE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+cor(cbind(finalFrame[,4], finalFrame2[,4], finalFrame3[,4], finalFrame4[,4], finalFrame5[,4]))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ##########################################################################################################
 #finalEnsemble between the two models
 #
@@ -162,7 +395,8 @@ finalEnsemble[,1] = test3id
 sum(finalEnsemble[,1] != test3id)
 
 
-finalEnsemble[,2:4] = ((.8)*finalFrame[,2:4] + (.2)*finalFrame2[,2:4]) 
+finalEnsemble[,2:4] = ((.7)*finalFrame[,2:4] + (.125)*finalFrame2[,2:4] + (.125) * finalFrame3[,2:4]
+					+(.05)* finalFrame4[,2:4]) 
 
 #validation
 nrow(finalEnsemble) == length(unique(test$id))
@@ -177,7 +411,7 @@ sum(finalEnsemble[,2:4])
 
 
 #write to the file
-write.csv(finalEnsemble, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results11.csv",
+write.csv(finalEnsemble, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results13.csv",
 		row.names = FALSE)
 
 
