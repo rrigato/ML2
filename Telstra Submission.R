@@ -99,6 +99,8 @@ sum(finalFrame[,2:4])
 
 write.csv(finalFrame, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame.csv",
 		row.names = FALSE)
+
+finalFrame = read.csv("C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame.csv")
 ###########################################################################################################
 #extraTrees model
 #
@@ -141,6 +143,7 @@ write.csv(finalFrame2, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame2
 		row.names = FALSE)
 
 
+finalFrame2 = read.csv("C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame2.csv")
 
 
 
@@ -194,6 +197,7 @@ write.csv(finalFrame3, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame3
 
 
 
+finalFrame3 = read.csv("C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame3.csv")
 
 
 
@@ -243,6 +247,7 @@ write.csv(finalFrame4, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame4
 		row.names = FALSE)
 
 
+finalFrame4 = read.csv("C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame4.csv")
 
 
 
@@ -298,6 +303,7 @@ write.csv(finalFrame5, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame5
 		row.names = FALSE)
 
 
+finalFrame5 = read.csv("C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame5.csv")
 
 
 ###########################################################################################################
@@ -637,7 +643,7 @@ write.csv(finalFrame9, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\finalFrame9
 
 
 
-cor(cbind(finalFrame[,4], finalFrame2[,4], finalFrame3[,4], finalFrame4[,4], finalFrame5[,4], dlFrame11[,4]))
+cor(cbind(finalFrame[,4], finalFrame2[,4], finalFrame3[,4], finalFrame4[,4], finalFrame5[,4], finalFrame6[,4]))
 
 
 
@@ -678,8 +684,8 @@ finalEnsemble[,1] = test3id
 sum(finalEnsemble[,1] != test3id)
 
 
-finalEnsemble[,2:4] = ((.65)*finalFrame[,2:4] + (.1)*finalFrame2[,2:4] + (.1) * finalFrame3[,2:4]
-					 + (.15) * finalFrame9[,2:4]) 
+finalEnsemble[,2:4] = ((.73)*finalFrame[,2:4] + (.09)*finalFrame2[,2:4] + (.09) * finalFrame3[,2:4] +
+				(.03) * finalFrame4[,2:4] + (.02) * finalFrame5[,2:4] + (.04) * finalFrame6[,2:4]) 
 
 #validation
 nrow(finalEnsemble) == length(unique(test$id))
@@ -694,7 +700,7 @@ sum(finalEnsemble[,2:4])
 
 
 #write to the file
-write.csv(finalEnsemble, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results17.csv",
+write.csv(finalEnsemble, "C:\\Users\\Randy\\Downloads\\Kaggle Telstra\\Results18.csv",
 		row.names = FALSE)
 
 

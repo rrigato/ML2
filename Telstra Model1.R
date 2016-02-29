@@ -1053,7 +1053,7 @@ y = as.factor(train2_response)
 
 
 
-eT = extraTrees(x,y, mtry = 3, nodesize = 15, numRandomCuts = 10)
+eT = extraTrees(x,y, mtry = 5, nodesize = 5, numRandomCuts = 5)
 etOut = predict(eT, newdata = test3Matrix, probability=TRUE)
 etOut = as.data.frame(etOut)
 
